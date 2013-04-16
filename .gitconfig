@@ -1,0 +1,37 @@
+[user]
+	name = Nick Schonning
+	email = nschonni@gmail.com
+[merge]
+	tool = kdiff3
+[mergetool "kdiff3"]
+	path = C:\\Program Files\\KDiff3\\kdiff3.exe
+[diff]
+	tool = kdiff3
+[difftool "kdiff3"]
+	path = c:\\Program Files\\KDiff3\\kdiff3.exe
+[core]
+	autocrlf = true
+	ignorecase = false
+	editor = vi
+[i18n]
+	filesEncoding = utf-8
+[alias]
+	st = status
+	co = checkout
+	ci = commit
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	wip = "git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
+	unwip = git log -n 1 | grep -q -c wip && git reset HEAD~1
+	cs = commit -s
+	up = push origin
+	br = branch -v
+	in = commit -a
+	down = pull origin
+	pum = pull upstream master
+	rum = pull --rebase -Xtheirs upstream master
+	fu = fetch upstream
+	mum = merge upstream/master
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	cleanup = !git branch --merged master | grep -v 'master$' | xargs git branch -d
+	unstage = reset HEAD --
+[credential]
