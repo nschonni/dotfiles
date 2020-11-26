@@ -1,24 +1,19 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 [user]
 	name = Nick Schonning
 	email = nschonni@gmail.com
-[merge]
-	tool = kdiff3
-[mergetool "kdiff3"]
-	path = C:\\Program Files\\KDiff3\\kdiff3.exe
-[diff]
-	tool = kdiff3
-[difftool "kdiff3"]
-	path = c:\\Program Files\\KDiff3\\kdiff3.exe
 [core]
-	autocrlf = true
-	ignorecase = false
-	editor = vi
-[i18n]
-	filesEncoding = utf-8
+	editor = code --wait
 [alias]
 	st = status
 	co = checkout
+	cum = "!git checkout upstream/$(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
 	ci = commit
+	cb = checkout -b
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	wip = "git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
 	unwip = git log -n 1 | grep -q -c wip && git reset HEAD~1
@@ -27,11 +22,15 @@
 	br = branch -v
 	in = commit -a
 	down = pull origin
-	pum = pull upstream master
-	rum = pull --rebase -Xtheirs upstream master
+	pum = "!git pull upstream $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
+	rum = "!git pull --rebase upstream $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
 	fu = fetch upstream
-	mum = merge upstream/master
+	mum = "!git merge upstream/$(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	cleanup = !git branch --merged master | grep -v 'master$' | xargs git branch -d
+	cleanup = !git branch --merged | grep -v $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)| xargs -n 1 git branch -d
+	cleanup-orphans = !git branch --no-merged | grep -v $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2) | xargs -n 1 git branch -D
 	unstage = reset HEAD --
-[credential]
+	aru = remote add upstream
+	pr = "!f() { git fetch upstream refs/pull/$1/head:pr/$1; } ; f"
+	pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
+	amend = commit -a --amend --no-edit
