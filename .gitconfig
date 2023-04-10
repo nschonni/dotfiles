@@ -1,36 +1,41 @@
+[user]
+	email = nschonni@gmail.com
+	name = Nick Schonning
+[core]
+	editor = code --wait
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[user]
-	name = Nick Schonning
-	email = nschonni@gmail.com
-[core]
-	editor = code --wait
 [alias]
-	st = status
-	co = checkout
-	cum = "!git checkout upstream/$(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
-	ci = commit
-	cb = checkout -b
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	wip = "git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
-	unwip = git log -n 1 | grep -q -c wip && git reset HEAD~1
-	cs = commit -s
-	up = push origin
-	br = branch -v
-	in = commit -a
-	down = pull origin
-	pum = "!git pull upstream $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
-	rum = "!git pull --rebase upstream $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
-	fu = fetch upstream
-	mum = "!git merge upstream/$(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	cleanup = !git branch --merged | grep -v $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)| xargs -n 1 git branch -d
-	cleanup-orphans = !git branch --no-merged | grep -v $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2) | xargs -n 1 git branch -D
-	unstage = reset HEAD --
+	amend = commit -a --amend --no-edit
 	aru = remote add upstream
+	br = branch -v
+	cb = checkout -b
+	ci = commit
+	cleanup = !git branch --merged | grep -v '\\*\\|master\\|live' | xargs -n 1 git branch -d
+	cleanup-orphans = !git branch --no-merged | grep -v '\\*\\|master\\|live' | xargs -n 1 git branch -D
+	co = checkout
+	cs = commit -s
+	cud = checkout upstream/docs
+	cul = checkout upstream/live
+	cum = checkout upstream/master
+	cus = checkout upstream/staging
+	down = pull origin
+	fu = fetch upstream
+	in = commit -a
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	mum = merge upstream/master
+	pf = push --force
 	pr = "!f() { git fetch upstream refs/pull/$1/head:pr/$1; } ; f"
 	pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
-	amend = commit -a --amend --no-edit
+	pum = pull upstream master
+	rc = rebase --continue
+	rum = "!git pull --rebase upstream $(git remote show upstream | grep 'HEAD branch' | cut -d ':' -f 2)"
+	st = status
+	unstage = reset HEAD --
+	unwip = git log -n 1 | grep -q -c wip && git reset HEAD~1
+	up = push origin
+	wip = "git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
